@@ -20,22 +20,23 @@ body {
   min-height: 100vh;
 }
 
-.login-box {
-  background: white;
-  border-radius: 16px;
-  padding: 48px 40px;
-  text-align: center;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  max-width: 560px;
+  width: 100%;
+  padding: 64px 32px 48px;
 }
 
-.login-box h1 {
+.login-top h1 {
   font-size: 2rem;
   margin-bottom: 12px;
 }
 
-.login-box p {
+.login-top p {
   color: #666;
-  margin-bottom: 28px;
 }
 
 .btn-google {
@@ -60,9 +61,6 @@ body {
 }
 
 header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 24px 0 20px;
   border-bottom: 1px solid #e5e5e5;
   margin-bottom: 24px;
@@ -72,10 +70,13 @@ header h1 {
   font-size: 1.5rem;
 }
 
-.user-info {
+.user-footer {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 24px 0 8px;
+  border-top: 1px solid #e5e5e5;
+  margin-top: 24px;
   font-size: 0.9rem;
   color: #555;
 }
@@ -119,19 +120,23 @@ header h1 {
   border-color: #4285F4;
 }
 
-.add-form button {
+.btn-add {
   background: #4285F4;
   color: white;
   border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  font-size: 1rem;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  font-size: 1.4rem;
   cursor: pointer;
-  font-weight: 500;
-  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(66,133,244,0.4);
 }
 
-.add-form button:hover {
+.btn-add:hover {
   background: #357abd;
 }
 
@@ -204,6 +209,15 @@ header h1 {
 
 .delete-btn:hover {
   color: #e53935;
+}
+
+.category-label {
+  font-size: 0.75rem;
+  color: #999;
+  margin: 16px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
 }
 
 .checked-label {
