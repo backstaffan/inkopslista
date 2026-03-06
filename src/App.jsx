@@ -80,12 +80,7 @@ export default function App() {
   return (
     <div className="app">
       <header>
-        <h1>Inkopslistan</h1>
-        <div className="user-info">
-          <img src={user.photoURL} alt="" className="avatar" />
-          <span>{user.displayName}</span>
-          <button className="btn-logout" onClick={logout}>Logga ut</button>
-        </div>
+        <h1>Inköpslistan</h1>
       </header>
 
       <main>
@@ -134,6 +129,12 @@ export default function App() {
           <p className="empty">Listan är tom. Lägg till någonting!</p>
         )}
       </main>
+
+      <footer className="user-footer">
+        <img src={user.photoURL} alt="" className="avatar" />
+        <span>{user.displayName}</span>
+        <button className="btn-logout" onClick={logout}>Logga ut</button>
+      </footer>
     </div>
   )
 }
