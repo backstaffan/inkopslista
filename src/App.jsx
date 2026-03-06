@@ -51,7 +51,7 @@ export default function App() {
       checked: false,
       createdAt: serverTimestamp(),
       createdBy: user.displayName,
-      category: categorize(text),
+      category: await categorize(text),
     })
   }
 
