@@ -20,22 +20,23 @@ body {
   min-height: 100vh;
 }
 
-.login-box {
-  background: white;
-  border-radius: 16px;
-  padding: 48px 40px;
-  text-align: center;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+.login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  max-width: 560px;
+  width: 100%;
+  padding: 64px 32px 48px;
 }
 
-.login-box h1 {
+.login-top h1 {
   font-size: 2rem;
   margin-bottom: 12px;
 }
 
-.login-box p {
+.login-top p {
   color: #666;
-  margin-bottom: 28px;
 }
 
 .btn-google {
@@ -119,19 +120,22 @@ header h1 {
   border-color: #4285F4;
 }
 
-.add-form button {
+.btn-add {
   background: #4285F4;
   color: white;
   border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  font-size: 1rem;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 1.5rem;
   cursor: pointer;
-  font-weight: 500;
-  white-space: nowrap;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.add-form button:hover {
+.btn-add:hover {
   background: #357abd;
 }
 

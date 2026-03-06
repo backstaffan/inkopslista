@@ -62,14 +62,14 @@ export default function App() {
 
   if (!user) {
     return (
-      <div className="center">
-        <div className="login-box">
-          <h1>Inkopslistan</h1>
-          <p>Logga in for att se och redigera listan</p>
-          <button className="btn-google" onClick={login}>
-            Logga in med Google
-          </button>
+      <div className="login-page">
+        <div className="login-top">
+          <h1>Inköpslistan</h1>
+          <p>Logga in för att se och redigera listan</p>
         </div>
+        <button className="btn-google" onClick={login}>
+          Logga in med Google
+        </button>
       </div>
     )
   }
@@ -92,12 +92,12 @@ export default function App() {
         <form onSubmit={addItem} className="add-form">
           <input
             type="text"
-            placeholder="Lagg till vara..."
+            placeholder="Lägg till vara..."
             value={newItem}
             onChange={(e) => setNewItem(e.target.value)}
             autoFocus
           />
-          <button type="submit">Lagg till</button>
+          <button type="submit" className="btn-add">+</button>
         </form>
 
         <ul className="list">
@@ -131,7 +131,7 @@ export default function App() {
         )}
 
         {items.length === 0 && (
-          <p className="empty">Listan ar tom. Lagg till nagonting!</p>
+          <p className="empty">Listan är tom. Lägg till någonting!</p>
         )}
       </main>
     </div>
