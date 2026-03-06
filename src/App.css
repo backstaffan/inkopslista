@@ -211,6 +211,15 @@ header h1 {
   color: #e53935;
 }
 
+.category-label {
+  font-size: 0.75rem;
+  color: #999;
+  margin: 16px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 600;
+}
+
 .checked-label {
   font-size: 0.85rem;
   color: #aaa;

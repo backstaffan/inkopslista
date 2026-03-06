@@ -12,6 +12,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore'
 import { auth, db, googleProvider } from './firebase'
+import { categorize, CATEGORY_ORDER } from './categorize'
 import './App.css'
 
 export default function App() {
@@ -50,6 +51,7 @@ export default function App() {
       checked: false,
       createdAt: serverTimestamp(),
       createdBy: user.displayName,
+      category: categorize(text),
     })
   }
 
@@ -77,6 +79,23 @@ export default function App() {
   const unchecked = items.filter((i) => !i.checked)
   const checked = items.filter((i) => i.checked)
 
+  const grouped = CATEGORY_ORDER
+    .map((cat) => ({ cat, items: unchecked.filter((i) => (i.category || 'Övrigt') === cat) }))
+    .filter(({ items }) => items.length > 0)
+
+  const renderItem = (item) => (
+    <li key={item.id} className={`item${item.checked ? ' checked' : ''}`}>
+      <button className="check-btn" onClick={() => toggleItem(item)}>
+        <span className={`circle${item.checked ? ' checked-circle' : ''}`}>
+          {item.checked ? '✓' : ''}
+        </span>
+      </button>
+      <span className="item-text">{item.text}</span>
+      {!item.checked && <span className="item-by">{item.createdBy}</span>}
+      <button className="delete-btn" onClick={() => deleteItem(item.id)}>&#x2715;</button>
+    </li>
+  )
+
   return (
     <div className="app">
       <header>
@@ -95,32 +114,20 @@ export default function App() {
           <button type="submit" className="btn-add">+</button>
         </form>
 
-        <ul className="list">
-          {unchecked.map((item) => (
-            <li key={item.id} className="item">
-              <button className="check-btn" onClick={() => toggleItem(item)}>
-                <span className="circle" />
-              </button>
-              <span className="item-text">{item.text}</span>
-              <span className="item-by">{item.createdBy}</span>
-              <button className="delete-btn" onClick={() => deleteItem(item.id)}>&#x2715;</button>
-            </li>
-          ))}
-        </ul>
+        {grouped.map(({ cat, items: catItems }) => (
+          <div key={cat}>
+            <p className="category-label">{cat}</p>
+            <ul className="list">
+              {catItems.map(renderItem)}
+            </ul>
+          </div>
+        ))}
 
         {checked.length > 0 && (
           <>
             <p className="checked-label">Klart ({checked.length})</p>
             <ul className="list checked-list">
-              {checked.map((item) => (
-                <li key={item.id} className="item checked">
-                  <button className="check-btn" onClick={() => toggleItem(item)}>
-                    <span className="circle checked-circle">&#10003;</span>
-                  </button>
-                  <span className="item-text">{item.text}</span>
-                  <button className="delete-btn" onClick={() => deleteItem(item.id)}>&#x2715;</button>
-                </li>
-              ))}
+              {checked.map(renderItem)}
             </ul>
           </>
         )}
