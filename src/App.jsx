@@ -1,0 +1,139 @@
+import { useState, useEffect } from 'react'
+import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth'
+import {
+  collection,
+  addDoc,
+  deleteDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from 'firebase/firestore'
+import { auth, db, googleProvider } from './firebase'
+import './App.css'
+
+export default function App() {
+  const [user, setUser] = useState(null)
+  const [items, setItems] = useState([])
+  const [newItem, setNewItem] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
+      setUser(u)
+      setLoading(false)
+    })
+    return unsubscribe
+  }, [])
+
+  useEffect(() => {
+    if (!user) return
+    const q = query(collection(db, 'items'), orderBy('createdAt', 'asc'))
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setItems(snapshot.docs.map((d) => ({ id: d.id, ...d.data() })))
+    })
+    return unsubscribe
+  }, [user])
+
+  const login = () => signInWithPopup(auth, googleProvider)
+  const logout = () => signOut(auth)
+
+  const addItem = async (e) => {
+    e.preventDefault()
+    const text = newItem.trim()
+    if (!text) return
+    setNewItem('')
+    await addDoc(collection(db, 'items'), {
+      text,
+      checked: false,
+      createdAt: serverTimestamp(),
+      createdBy: user.displayName,
+    })
+  }
+
+  const toggleItem = (item) =>
+    updateDoc(doc(db, 'items', item.id), { checked: !item.checked })
+
+  const deleteItem = (id) => deleteDoc(doc(db, 'items', id))
+
+  if (loading) return <div className="center">Laddar...</div>
+
+  if (!user) {
+    return (
+      <div className="center">
+        <div className="login-box">
+          <h1>Inkopslistan</h1>
+          <p>Logga in for att se och redigera listan</p>
+          <button className="btn-google" onClick={login}>
+            Logga in med Google
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const unchecked = items.filter((i) => !i.checked)
+  const checked = items.filter((i) => i.checked)
+
+  return (
+    <div className="app">
+      <header>
+        <h1>Inkopslistan</h1>
+        <div className="user-info">
+          <img src={user.photoURL} alt="" className="avatar" />
+          <span>{user.displayName}</span>
+          <button className="btn-logout" onClick={logout}>Logga ut</button>
+        </div>
+      </header>
+
+      <main>
+        <form onSubmit={addItem} className="add-form">
+          <input
+            type="text"
+            placeholder="Lagg till vara..."
+            value={newItem}
+            onChange={(e) => setNewItem(e.target.value)}
+            autoFocus
+          />
+          <button type="submit">Lagg till</button>
+        </form>
+
+        <ul className="list">
+          {unchecked.map((item) => (
+            <li key={item.id} className="item">
+              <button className="check-btn" onClick={() => toggleItem(item)}>
+                <span className="circle" />
+              </button>
+              <span className="item-text">{item.text}</span>
+              <span className="item-by">{item.createdBy}</span>
+              <button className="delete-btn" onClick={() => deleteItem(item.id)}>&#x2715;</button>
+            </li>
+          ))}
+        </ul>
+
+        {checked.length > 0 && (
+          <>
+            <p className="checked-label">Klart ({checked.length})</p>
+            <ul className="list checked-list">
+              {checked.map((item) => (
+                <li key={item.id} className="item checked">
+                  <button className="check-btn" onClick={() => toggleItem(item)}>
+                    <span className="circle checked-circle">&#10003;</span>
+                  </button>
+                  <span className="item-text">{item.text}</span>
+                  <button className="delete-btn" onClick={() => deleteItem(item.id)}>&#x2715;</button>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+
+        {items.length === 0 && (
+          <p className="empty">Listan ar tom. Lagg till nagonting!</p>
+        )}
+      </main>
+    </div>
+  )
+}
