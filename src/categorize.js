@@ -21,7 +21,7 @@ let client = null
 function getClient() {
   if (!client) {
     const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-    if (!apiKey) return null
+if (!apiKey) return null
     // dangerouslyAllowBrowser krävs för att använda SDK i webbläsaren.
     // API-nyckeln är synlig i appens bundle — okej för privat app.
     client = new Anthropic({ apiKey, dangerouslyAllowBrowser: true })
@@ -53,7 +53,8 @@ Vara: "${text}"`,
 
     const result = response.content[0]?.text?.trim()
     return CATEGORY_ORDER.includes(result) ? result : 'Övrigt'
-  } catch {
+  } catch (err) {
+    console.error('Categorize error:', err)
     return 'Övrigt'
   }
 }
