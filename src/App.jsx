@@ -56,8 +56,14 @@ export default function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (u) => {
-      setUser(u)
-      setLoading(false)
+      const allowed = ['back.staffan@gmail.com', 'hannacbirgersson@gmail.com']
+      if (u && !allowed.includes(u.email)) {
+        signOut(auth)
+        setLoading(false)
+      } else {
+        setUser(u)
+        setLoading(false)
+      }
     })
     return unsubscribe
   }, [])
